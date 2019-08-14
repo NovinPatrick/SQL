@@ -1,0 +1,70 @@
+SOLUTIONS:
+----------
+
+1)Select the Employee with the top three salaries			
+
+select * from employee where salary in (select distinct(salary) from employee order by salary desc limit 3);
+
+
+2)Select the Employee with the least salary
+				
+ select * from employee where salary = (select min(salary) from employee);
+
+
+3)Select the Employee who does not have a manager in the department table	
+
+select * from employee where manager_id not in (select e_id from employee e join dept d on e.name=d.dep_manager);
+
+
+4)Select the Employee who is also a Manager				
+
+ select * from employee where e_id in (select e_id from employee e join dept d on e.name=d.dep_manager);
+
+
+5)Select the Empolyee who is a Manager and has least salary			
+
+select * from employee where salary=(select min(salary) from employee where e_id in (select distinct(manager_id) from employee));
+
+
+6)Select the total number of Employees in Communications departments
+
+ select count(*) as totalemployee from employee where dep_id=(select dep_id from dept where dep_name='COMMUNICATIONS');
+
+
+7)Select the Employee in Finance Department who has the top salary	
+
+select * from employee where (dep_id,salary)=(select d.dep_id,max(salary) from employee e join dept d on e.dep_id=d.dep_id where d.dep_name='FINANCE');
+
+
+8)Select the Employee in product depatment who has the least salary	
+	
+select * from employee where(dep_id,salary)=(select d.dep_id,min(salary) from employee e join dept d on e.dep_id=d.dep_id where d.dep_name='PRODUCT');
+
+
+9)Select the count of Empolyees in Health with maximum salary				
+
+select count(*) as employeecount from employee where (salary,dep_id)=(select max(salary),d.dep_id from employee e join dept d on e.dep_id=d.dep_id where dep_name='HEALTH');
+
+
+10)Select the Employees who report to Natasha Stevens
+
+select ee.e_id,ee.name,ee.dep_id,ee.salary,ee.manager_id from employee e join employee ee on e.e_id=ee.manager_id where e.name='NATASHA STEVENS';
+
+
+11)Display the Employee name,Employee count,Dep name,Dept manager in the Health department
+
+select GROUP_CONCAT(name) as name,count(*),dep_name,dep_Manager from employee e join dept d on e.dep_id=d.dep_id where d.dep_name='HEALTH';
+
+
+12)Display the Department id,Employee ids and Manager ids for the Communications department
+
+select d.dep_id,e_id,manager_id from employee e join dept d on e.dep_id=d.dep_id where dep_name='COMMUNICATIONS';
+
+
+13)Select the Average Expenses for Each dept with Dept id and Dept name
+
+select format(avg(salary),2) as averageexpenses,d.dep_id,dep_name from employee e join dept d on e.dep_id=d.dep_id group by d.dep_id;
+
+14)Select the total expense for the department finance
+				
+select sum(salary) as totalexpenses from employee e join dept d on e.dep_id=d.dep_id where dep_name='FINANCE';
